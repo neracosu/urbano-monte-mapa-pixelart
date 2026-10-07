@@ -1,0 +1,29 @@
+:root { color-scheme: dark; --fondo: #0f1620; --papel: #e9dfc4; --tinta: #c9bd9b; --acento: #5ed29c; }
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; overflow: hidden; overscroll-behavior: none; background: var(--fondo); }
+body { font: 15px/1.4 system-ui, sans-serif; color: var(--papel); }
+#mapa {
+  position: fixed; inset: 0; width: 100%; height: 100%; display: block;
+  touch-action: none; cursor: grab; outline: none;
+  image-rendering: crisp-edges; image-rendering: pixelated;
+}
+#mapa:active { cursor: grabbing; }
+#mapa:focus-visible { box-shadow: inset 0 0 0 3px var(--acento); }
+.controles {
+  position: fixed; right: max(12px, env(safe-area-inset-right)); bottom: max(12px, env(safe-area-inset-bottom));
+  display: flex; flex-direction: column; gap: 8px;
+}
+.controles button {
+  min-width: 48px; height: 48px; padding: 0 10px; border: 2px solid var(--papel); border-radius: 0;
+  background: var(--fondo); color: var(--papel); font: 700 18px/1 ui-monospace, monospace; cursor: pointer;
+}
+.controles button:hover, .controles button:focus-visible { background: var(--papel); color: var(--fondo); outline: none; }
+.credito {
+  position: fixed; left: max(12px, env(safe-area-inset-left)); bottom: max(12px, env(safe-area-inset-bottom));
+  max-width: calc(100% - 96px); margin: 0; padding: 4px 8px; background: rgb(15 22 32 / .82);
+  font-size: 11px; color: var(--tinta); pointer-events: none;
+}
+.aviso {
+  position: fixed; inset: 0; margin: auto; width: min(90%, 420px); height: fit-content; padding: 16px;
+  background: var(--fondo); border: 2px solid var(--papel); text-align: center;
+}

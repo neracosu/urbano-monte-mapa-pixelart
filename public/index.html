@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0f1620">
+<title>Monte: el planisferio de 1587 en pixel art</title>
+<meta name="description" content="El planisferio de Urbano Monte (Milán, 1587), el mapa del mundo más grande del siglo XVI, convertido en pixel art para recorrerlo con el dedo.">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+<canvas id="mapa" tabindex="0" role="application"
+  aria-label="Planisferio de Urbano Monte, 1587. Arrastre para moverse. Teclas más y menos para el zoom, flechas para moverse y cero para ver todo."></canvas>
+<div class="controles" role="group" aria-label="Zoom">
+  <button id="acercar" type="button" aria-label="Acercar">+</button>
+  <button id="alejar" type="button" aria-label="Alejar">&minus;</button>
+  <button id="todo" type="button" aria-label="Ver el mapa completo">Todo</button>
+</div>
+<p class="credito">Urbano Monte, 1587 &middot; David Rumsey Map Collection, Stanford &middot; CC BY-NC-SA 3.0</p>
+<p id="aviso" class="aviso" role="alert" hidden></p>
+<noscript><p class="aviso">Este mapa necesita JavaScript para funcionar.</p></noscript>
+<script type="module" src="visor/principal.js"></script>
+</body>
+</html>
