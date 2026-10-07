@@ -107,6 +107,18 @@ try {
   revisar(todo, 'tras ver todo');
   if (todo.z !== inicio.z) fallas.push(`ver todo dejo la escala en ${todo.z}, no en ${inicio.z}`);
 
+  // girar: cuatro cuartos de vuelta devuelven el mapa a como estaba
+  for (let i = 1; i <= 4; i++) {
+    await pagina.click('#girar');
+    await pagina.waitForTimeout(600);
+    const girado = await descansar();
+    revisar(girado, `tras girar ${i}`);
+    if (girado.giro !== i % 4) fallas.push(`tras ${i} giros el mapa dice giro ${girado.giro}`);
+    if (await colores() < 8) fallas.push(`tras girar ${i}: el lienzo esta casi vacio`);
+    if (i === 1) await pagina.screenshot({ path: captura.replace('.png', '-girado.png') });
+  }
+  if ((await estado()).z !== todo.z) fallas.push('tras cuatro giros la escala no es la del inicio');
+
   const desborde = await pagina.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   if (desborde > 0) fallas.push(`la pagina se desborda ${desborde}px`);
   if (!cortadas.size) fallas.push('no se corto ninguna tesela: la prueba de reposicion no corrio');

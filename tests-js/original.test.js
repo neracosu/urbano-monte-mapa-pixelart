@@ -28,4 +28,5 @@ test('regionOriginal: no pide mas detalle del que tiene el escaneo ni mas del to
 test('urlOriginal: region y ancho en el formato de IIIF', () => {
   assert.equal(urlOriginal(MAPA, { x: 30016, y: 30056, w: 2048, h: 2048, ancho: 512 }),
     'https://ejemplo.test/iiif/X/30016,30056,2048,2048/512,/0/default.jpg');
+  assert.equal(urlOriginal(MAPA, { x: 1, y: 2, w: 30, h: 40, ancho: 15 }, 3), 'https://ejemplo.test/iiif/X/1,2,30,40/15,/270/default.jpg');
 });

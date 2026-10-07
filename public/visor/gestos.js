@@ -78,6 +78,7 @@ export function escuchar(el, mapa) {
     else if (e.key === '+' || e.key === '=') mapa.paso(1);
     else if (e.key === '-' || e.key === '_') mapa.paso(-1);
     else if (e.key === '0') mapa.verTodo();
+    else if (e.key === 'r' || e.key === 'R') mapa.girar(e.shiftKey ? -1 : 1);
     else return;
     e.preventDefault();
   });

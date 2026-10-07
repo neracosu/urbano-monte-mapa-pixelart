@@ -29,14 +29,17 @@ export function conectarOriginal(boton, capa, nota, mapa) {
 
   function encender() {
     const e = mapa.estado(), k = mapa.proporcion();
-    const r = regionOriginal(e, { ancho: e.ancho, alto: e.alto }, mapa.datos);
+    const r = regionOriginal(e, e.vista, mapa.datos);
     if (r.w <= 0 || r.h <= 0) return;
     activo = true;
     nota.hidden = true;
     boton.setAttribute('aria-pressed', 'true');
     boton.setAttribute('aria-busy', 'true');
+    // la zona esta en pixeles de la vista; con el mapa girado, sus esquinas caen en otro sitio del canvas
+    const [ax, ay] = mapa.aLienzo(r.izq, r.arriba), [bx, by] = mapa.aLienzo(r.izq + r.anchoLienzo, r.arriba + r.altoLienzo);
     Object.assign(capa.style, {
-      left: `${r.izq / k}px`, top: `${r.arriba / k}px`, width: `${r.anchoLienzo / k}px`, height: `${r.altoLienzo / k}px`,
+      left: `${Math.min(ax, bx) / k}px`, top: `${Math.min(ay, by) / k}px`,
+      width: `${Math.abs(bx - ax) / k}px`, height: `${Math.abs(by - ay) / k}px`,
     });
     capa.onload = () => {
       if (!activo) return;
@@ -48,10 +51,10 @@ export function conectarOriginal(boton, capa, nota, mapa) {
       apagar();
       avisar();
     };
-    capa.src = urlOriginal(mapa.datos, r);
+    capa.src = urlOriginal(mapa.datos, r, e.giro);
     // en cuanto el mapa se mueve, el original deja de casar con lo de abajo: se apaga
     soltar = mapa.alCambiar(n => {
-      if (n.x !== e.x || n.y !== e.y || n.z !== e.z || n.ancho !== e.ancho || n.alto !== e.alto) apagar();
+      if (n.x !== e.x || n.y !== e.y || n.z !== e.z || n.giro !== e.giro || n.ancho !== e.ancho || n.alto !== e.alto) apagar();
     });
   }
 

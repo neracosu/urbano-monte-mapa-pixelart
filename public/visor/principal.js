@@ -7,6 +7,7 @@ try {
   window.mapa = mapa;
   document.getElementById('acercar').addEventListener('click', () => mapa.paso(1));
   document.getElementById('alejar').addEventListener('click', () => mapa.paso(-1));
+  document.getElementById('girar').addEventListener('click', () => mapa.girar(1));
   document.getElementById('todo').addEventListener('click', () => mapa.verTodo());
   conectarOriginal(document.getElementById('ver-original'), document.getElementById('original'), document.getElementById('nota'), mapa);
   document.body.classList.add('listo');

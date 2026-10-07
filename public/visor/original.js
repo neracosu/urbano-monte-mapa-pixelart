@@ -17,6 +17,7 @@ export function regionOriginal(cam, lienzo, mapa, tope = TOPE) {
   };
 }
 
-export function urlOriginal(mapa, r) {
-  return `${mapa.original.iiif}/${r.x},${r.y},${r.w},${r.h}/${r.ancho},/0/default.jpg`;
+// giro: cuartos de vuelta en el sentido del reloj; el servidor entrega la imagen ya girada.
+export function urlOriginal(mapa, r, giro = 0) {
+  return `${mapa.original.iiif}/${r.x},${r.y},${r.w},${r.h}/${r.ancho},/${giro * 90}/default.jpg`;
 }
