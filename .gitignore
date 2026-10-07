@@ -7,3 +7,5 @@ capturas/
 public/prueba/*.png
 public/prueba/*.jpg
 public/prueba/*.json
+public/teselas/
+public/mapa.json
