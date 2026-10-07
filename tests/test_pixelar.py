@@ -67,3 +67,15 @@ def test_extraer_ordena_de_oscuro_a_claro():
     assert p.dtype == np.uint8 and p.shape == (2, 3)
     assert np.abs(p[0].astype(int) - [20, 30, 60]).max() <= 2
     assert np.abs(p[1].astype(int) - [200, 180, 120]).max() <= 2
+
+
+def test_extraer_devuelve_solo_colores_en_uso():
+    # mas colores que cupo: lo que salga tiene que ser paleta que alguna muestra usa
+    rng = np.random.default_rng(11)
+    colores = rng.integers(0, 256, (40, 3), dtype=np.uint8)
+    a = np.repeat(np.repeat(colores.reshape(5, 8, 3), 6, axis=0), 6, axis=1)
+    p = extraer([Image.fromarray(a, 'RGB')], 32)
+    pix = a.reshape(-1, 3).astype(int)
+    cercano = ((pix[:, None, :] - p[None].astype(int)) ** 2).sum(axis=2).argmin(axis=1)
+    assert set(cercano.tolist()) == set(range(len(p)))
+    assert len({tuple(c) for c in p.tolist()}) == len(p)

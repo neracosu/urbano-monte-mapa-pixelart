@@ -16,6 +16,10 @@ def silueta_por_color(a, umbral=38.0):
         raise ValueError('ninguna figura se distingue del fondo: baje el umbral')
     tamanos = ndi.sum(distinta, etiquetas, range(1, cuantas + 1))
     figura = etiquetas == int(np.argmax(tamanos)) + 1
+    if figura[0].any() or figura[-1].any() or figura[:, 0].any() or figura[:, -1].any():
+        raise ValueError('la figura toca el borde: agrande la caja')
+    if figura.mean() < 0.01:
+        raise ValueError('la silueta no llega al 1 % de la caja: baje el umbral o achique la caja')
     figura = ndi.binary_dilation(ndi.binary_fill_holes(figura), iterations=1)
     if figura.mean() > 0.6:
         raise ValueError('la silueta cubre mas del 60 % de la caja: suba el umbral o agrande la caja')
@@ -36,7 +40,7 @@ def _difundir(a, conocido):
     return a
 
 
-def rellenar(a, mascara, suavizado=3.0):
+def rellenar(a, mascara, suavizado=3.0, tinta=40.0, grano=12):
     """Reemplaza lo enmascarado por el fondo vecino: el tono sale de difundir el borde hacia adentro y
     el grano (puntos, trazos del mar) se copia espejado a traves del borde de la mascara."""
     a = np.array(a, dtype=np.float32)
@@ -49,8 +53,14 @@ def rellenar(a, mascara, suavizado=3.0):
     yy, xx = np.nonzero(m)
     # el punto espejo: igual de lejos del borde, pero del lado del mar
     ey, ex = 2 * cy[yy, xx] - yy, 2 * cx[yy, xx] - xx
+    # no sirve de fuente lo que no es grano: trazos, rotulos u otra figura saldrian reflejados
+    marcado = ~m & (np.abs(a - suave).max(axis=2) > tinta)
+    etiquetas, cuantas = ndi.label(marcado)
+    if cuantas:
+        grandes = np.flatnonzero(ndi.sum(marcado, etiquetas, range(1, cuantas + 1)) > grano) + 1
+        marcado = np.isin(etiquetas, grandes)
     vale = (ey >= 0) & (ey < alto) & (ex >= 0) & (ex < ancho)
-    vale[vale] = ~m[ey[vale], ex[vale]]
+    vale[vale] = ~(m | marcado)[ey[vale], ex[vale]]
     r = a.copy()
     r[yy, xx] = suave[yy, xx]
     r[yy[vale], xx[vale]] += (a - suave)[ey[vale], ex[vale]]

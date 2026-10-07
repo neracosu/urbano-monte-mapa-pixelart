@@ -1,0 +1,7 @@
+# La prueba cambia con los mismos nombres de archivo: nada de aqui se cachea
+<IfModule mod_expires.c>
+  ExpiresActive Off
+</IfModule>
+<IfModule mod_headers.c>
+  Header set Cache-Control "no-cache"
+</IfModule>

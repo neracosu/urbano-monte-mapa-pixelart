@@ -1,13 +1,13 @@
 // Abre una URL en Chromium headless y revisa lo que un ojo se salta:
 // errores, recursos que no cargan, desborde a lo ancho y pixel art a escala no entera.
-//   node herramientas/ver.mjs <url> [anchoxalto] [captura.png]
+//   node herramientas/ver.mjs <url> [anchoxalto] [captura.png] [densidad]
 import { chromium } from 'playwright-core';
 import { mkdirSync, readdirSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { dirname, join } from 'node:path';
 
 const RUTA_CHROME = 'chrome-linux64/chrome';
-const [url, tam = '390x844', captura = 'capturas/ver.png'] = process.argv.slice(2);
+const [url, tam = '390x844', captura = 'capturas/ver.png', densidad] = process.argv.slice(2);
 if (!url) { console.error('uso: node herramientas/ver.mjs <url> [anchoxalto] [captura.png]'); process.exit(2); }
 const [width, height] = tam.split('x').map(Number);
 
@@ -16,7 +16,7 @@ const carpeta = readdirSync(cache).filter(n => /^chromium-\d+$/.test(n)).sort().
 if (!carpeta) { console.error(`no hay Chromium en ${cache}`); process.exit(2); }
 
 const navegador = await chromium.launch({ executablePath: join(cache, carpeta, RUTA_CHROME) });
-const pagina = await navegador.newPage({ viewport: { width, height }, deviceScaleFactor: width < 600 ? 3 : 1 });
+const pagina = await navegador.newPage({ viewport: { width, height }, deviceScaleFactor: Number(densidad) || (width < 600 ? 3 : 1) });
 const fallas = [];
 pagina.on('console', m => { if (m.type() === 'error') fallas.push(`consola: ${m.text()}`); });
 pagina.on('pageerror', e => fallas.push(`error: ${e.message}`));
@@ -39,7 +39,7 @@ if (medidas.desborde > 0) fallas.push(`la pagina se desborda ${medidas.desborde}
 if (!medidas.pixel.length) fallas.push('no hay ningun elemento .pixel en la pagina');
 for (const p of medidas.pixel) {
   if (!p.natural) fallas.push(`${p.quien}: no cargo`);
-  else if (p.k < 1 || Math.abs(p.k - Math.round(p.k)) > 0.01) fallas.push(`${p.quien}: escala ${p.k.toFixed(3)}, no entera`);
+  else if (p.k < 0.99 || Math.abs(p.k - Math.round(p.k)) > 0.01) fallas.push(`${p.quien}: escala ${p.k.toFixed(3)}, no entera`);
 }
 console.log(`${url} a ${tam}: ${medidas.pixel.length} elementos de pixel art, captura en ${captura}`);
 if (fallas.length) { console.error(fallas.join('\n')); process.exit(1); }

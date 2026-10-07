@@ -74,3 +74,27 @@ def test_rellenar_continua_la_textura_del_mar():
     assert oscuros >= 4                      # el parche no es una mancha lisa
     assert r[m].min() >= 105 and r[m].max() <= 225   # ni colores ajenos al mar
     assert np.array_equal(r[~m], a[~m])
+
+
+def test_silueta_que_toca_el_borde_de_la_caja():
+    a = np.full((40, 40, 3), MAR, dtype=np.float32)
+    a[30:40, 15:25] = [90, 90, 95]  # la cola se sale por abajo
+    with pytest.raises(ValueError, match='agrande la caja'):
+        silueta_por_color(a)
+
+
+def test_silueta_demasiado_chica():
+    a = np.full((40, 40, 3), MAR, dtype=np.float32)
+    a[10:13, 10:13] = [90, 90, 95]  # solo una mota: el umbral dejo fuera a la figura
+    with pytest.raises(ValueError, match='baje el umbral'):
+        silueta_por_color(a)
+
+
+def test_rellenar_no_copia_la_tinta_vecina():
+    a = np.full((48, 48, 3), MAR, dtype=np.float32)
+    a[::4, ::4] = [110, 120, 110]
+    a[:, 13:15] = [40, 30, 25]  # un trazo de tinta a 3 pixeles de la mascara
+    m = np.zeros((48, 48), dtype=bool)
+    m[18:30, 18:30] = True
+    r = rellenar(a, m)
+    assert r[m].min() >= 80  # el trazo no aparece reflejado dentro del parche

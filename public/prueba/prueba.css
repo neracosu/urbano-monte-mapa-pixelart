@@ -7,9 +7,9 @@ h2 { font-size: 1.15rem; margin: 40px 0 4px; }
 h3 { font-size: 1rem; margin: 24px 0 8px; color: var(--acento); }
 p { margin: 0 0 12px; color: var(--tinta); }
 a { color: var(--acento); }
-figure { margin: 0 0 8px; overflow: hidden; }
+figure { margin: 0 0 8px; overflow-x: auto; }
 img, canvas { display: block; max-width: none; }
-.pixel { image-rendering: pixelated; image-rendering: crisp-edges; }
+.pixel { image-rendering: crisp-edges; image-rendering: pixelated; }
 .original { width: 100%; max-width: 768px; height: auto; }
 .nota { font-size: .875rem; }
 footer { margin-top: 48px; font-size: .8125rem; color: var(--tinta); }

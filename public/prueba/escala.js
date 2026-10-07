@@ -1,7 +1,7 @@
 // Pone cada imagen .pixel a la mayor escala entera que cabe en su contenedor:
 // un pixel del dibujo ocupa siempre un numero entero de pixeles de pantalla.
 export function escalaEntera(el, natural) {
-  const dpr = Math.min(window.devicePixelRatio || 1, 3);
+  const dpr = window.devicePixelRatio || 1;
   const k = Math.max(1, Math.floor((el.parentElement.clientWidth * dpr) / natural));
   el.style.width = `${(natural * k) / dpr}px`;
   return k;

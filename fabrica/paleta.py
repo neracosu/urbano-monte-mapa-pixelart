@@ -11,7 +11,8 @@ def extraer(muestras, n):
     pix = pix[::max(1, len(pix) // TOPE)]
     tira = Image.fromarray(np.ascontiguousarray(pix).reshape(1, -1, 3), 'RGB')
     q = tira.quantize(colors=n, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE)
-    usados = len(q.getcolors())
-    p = np.array(q.getpalette(), dtype=np.uint8).reshape(-1, 3)[:usados]
+    # Pillow puede dejar indices sin uso en medio: se toman los usados, no los primeros
+    usados = sorted(i for _, i in q.getcolors())
+    p = np.unique(np.array(q.getpalette(), dtype=np.uint8).reshape(-1, 3)[usados], axis=0)
     luz = p.astype(np.float32) @ np.array([0.299, 0.587, 0.114], dtype=np.float32)
     return p[np.argsort(luz, kind='stable')]

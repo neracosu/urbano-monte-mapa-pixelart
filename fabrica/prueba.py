@@ -23,7 +23,7 @@ ZONAS = [
     {'id': 'costa', 'x': 20640, 'y': 32616},
     {'id': 'rey', 'x': 24624, 'y': 41376},
 ]
-CRIATURA = {'id': 'monstruo-marino', 'caja': (50688, 27360, 1512, 2688), 'factor': 6, 'colores': 32}
+CRIATURA = {'id': 'monstruo-marino', 'caja': (50688, 27360, 1512, 2688), 'factor': 4, 'colores': 48}
 # clave, factor (pixeles del escaneo por pixel del dibujo), colores
 COMBOS = [('a', 4, 48), ('b', 6, 32), ('c', 6, 16), ('d', 8, 16)]
 
@@ -47,8 +47,8 @@ def construir(fuente, salida):
     x0, y0 = CRIATURA['caja'][0] // f, CRIATURA['caja'][1] // f
     a = reducir(recorte, f)
     figura = silueta_por_color(a)
-    # el relleno toma 3 pixeles de margen: el halo del contorno no es mar
-    hueco = ndi.binary_dilation(figura, iterations=3)
+    # el relleno toma un margen de unos 18 pixeles del escaneo: el halo del contorno no es mar
+    hueco = ndi.binary_dilation(figura, iterations=-(-18 // f))
     a_imagen(cuantizar(rellenar(a, hueco), pal, x0, y0), pal).save(salida / 'criatura-fondo.png', optimize=True)
     color = pal[cuantizar(a, pal, x0, y0)]
     alfa = np.where(figura, 255, 0).astype(np.uint8)
