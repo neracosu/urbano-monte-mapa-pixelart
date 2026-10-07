@@ -11,7 +11,7 @@ import numpy as np
 from PIL import Image
 
 from .base import construir_base, promediar
-from .fuente import ALTO, ANCHO
+from .fuente import ALTO, ANCHO, BASE, FICHA
 from .niveles import FACTOR_BASE, LADO_TESELA, niveles
 from .paleta import extraer
 from .pixelar import a_imagen, cuantizar
@@ -69,7 +69,8 @@ def manifiesto(capas, paleta, sello, ancho, alto, factor, lado):
     if medidas != [(n['ancho'], n['alto']) for n in ns]:
         raise ValueError(f'las capas {medidas} no casan con los niveles calculados')
     return {'ancho': ancho, 'alto': alto, 'factor': factor, 'lado': lado, 'colores': len(paleta),
-            'sello': sello, 'paleta': np.asarray(paleta).tolist(), 'niveles': ns}
+            'sello': sello, 'paleta': np.asarray(paleta).tolist(), 'niveles': ns,
+            'original': {'iiif': BASE, 'ficha': FICHA}}
 
 
 def construir(fuente, publico):

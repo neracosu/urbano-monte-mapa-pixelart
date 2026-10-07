@@ -7,6 +7,7 @@ from pathlib import Path
 from PIL import Image
 
 BASE = 'https://www.davidrumsey.com/luna/servlet/iiif/RUMSEY~8~1~303661~90074314'
+FICHA = 'https://www.davidrumsey.com/luna/servlet/detail/RUMSEY~8~1~303661~90074314'
 ANCHO, ALTO, LADO = 62079, 62160, 1536
 AGENTE = 'monte.neracosu.com/1.0 (proyecto educativo sin fines comerciales)'
 

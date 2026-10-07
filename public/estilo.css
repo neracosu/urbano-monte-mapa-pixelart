@@ -18,6 +18,15 @@ body { font: 15px/1.4 system-ui, sans-serif; color: var(--papel); }
   background: var(--fondo); color: var(--papel); font: 700 18px/1 ui-monospace, monospace; cursor: pointer;
 }
 .controles button:hover, .controles button:focus-visible { background: var(--papel); color: var(--fondo); outline: none; }
+.controles button[aria-pressed="true"] { background: var(--acento); border-color: var(--acento); color: var(--fondo); }
+.controles button[aria-busy="true"] { opacity: .6; }
+.original { position: fixed; pointer-events: none; image-rendering: auto; }
+.original[hidden], .nota[hidden], .aviso[hidden] { display: none; }
+.nota {
+  position: fixed; left: 12px; right: 12px; top: max(12px, env(safe-area-inset-top)); margin: 0 auto; max-width: 440px;
+  padding: 10px 12px; background: var(--fondo); border: 2px solid var(--papel); font-size: 14px;
+}
+.nota a { color: var(--acento); }
 .credito {
   position: fixed; left: max(12px, env(safe-area-inset-left)); bottom: max(12px, env(safe-area-inset-bottom));
   max-width: calc(100% - 96px); margin: 0; padding: 4px 8px; background: rgb(15 22 32 / .82);

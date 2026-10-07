@@ -107,3 +107,5 @@ def test_paleta_y_manifiesto(tmp_path):
     assert (m['ancho'], m['alto'], m['factor'], m['lado'], m['colores'], m['sello']) == (38, 36, 4, 4, 4, 'abc')
     assert m['niveles'] == niveles(38, 36, 4, 4)
     assert m['paleta'] == paleta.tolist()
+    assert m['original']['iiif'] == fuente.BASE
+    assert m['original']['ficha'].startswith('https://www.davidrumsey.com/luna/servlet/detail/')

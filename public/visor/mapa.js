@@ -80,6 +80,7 @@ export async function crearMapa(el, { base = '' } = {}) {
   const centro = () => [lienzo.ancho / 2, lienzo.alto / 2];
   const api = {
     estado,
+    datos: mapa,
     proporcion: () => lienzo.ancho / (el.clientWidth || 1),
     mover(dx, dy) {
       detener();
