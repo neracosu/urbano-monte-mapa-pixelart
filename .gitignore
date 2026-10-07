@@ -1,0 +1,9 @@
+.venv/
+node_modules/
+__pycache__/
+.pytest_cache/
+.superpowers/
+capturas/
+public/prueba/*.png
+public/prueba/*.jpg
+public/prueba/*.json

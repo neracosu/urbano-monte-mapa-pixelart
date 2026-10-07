@@ -1,0 +1,8 @@
+{
+  "name": "monte",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "playwright-core": "^1.50.0"
+  }
+}
