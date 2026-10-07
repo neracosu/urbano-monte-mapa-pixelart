@@ -1,0 +1,21 @@
+Options -Indexes
+AddDefaultCharset UTF-8
+
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteCond %{REQUEST_URI} !^/\.well-known/
+RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
+<IfModule mod_headers.c>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+  # la prueba no es para buscadores
+  <If "%{REQUEST_URI} =~ m#^/prueba/#">
+    Header set X-Robots-Tag "noindex, nofollow"
+  </If>
+</IfModule>

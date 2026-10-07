@@ -9,6 +9,8 @@ def silueta_por_color(a, umbral=38.0):
     borde = np.concatenate([a[0], a[-1], a[:, 0], a[:, -1]])
     fondo = np.median(borde, axis=0)
     distinta = np.sqrt(((a - fondo) ** 2).sum(axis=2)) > umbral
+    # abrir con un cuadrado de 3: suelta meridianos y flecos de uno o dos pixeles sin comerse las esquinas
+    distinta = ndi.binary_opening(distinta, structure=np.ones((3, 3), dtype=bool))
     etiquetas, cuantas = ndi.label(distinta)
     if cuantas == 0:
         raise ValueError('ninguna figura se distingue del fondo: baje el umbral')
@@ -20,12 +22,9 @@ def silueta_por_color(a, umbral=38.0):
     return figura
 
 
-def rellenar(a, mascara):
-    """Reemplaza lo enmascarado, del borde hacia adentro, por el promedio de los vecinos ya conocidos."""
-    a = np.array(a, dtype=np.float32)
-    conocido = ~np.asarray(mascara, dtype=bool)
-    if not conocido.any():
-        raise ValueError('la mascara cubre todo: no hay fondo de donde rellenar')
+def _difundir(a, conocido):
+    """Lo desconocido, del borde hacia adentro, toma el promedio de los vecinos ya conocidos."""
+    a, conocido = a.copy(), conocido.copy()
     while not conocido.all():
         ap = np.pad(a * conocido[:, :, None], ((1, 1), (1, 1), (0, 0)))
         cp = np.pad(conocido.astype(np.float32), 1)
@@ -35,3 +34,25 @@ def rellenar(a, mascara):
         a[nuevos] = suma[nuevos] / cuenta[nuevos][:, None]
         conocido |= nuevos
     return a
+
+
+def rellenar(a, mascara, suavizado=3.0):
+    """Reemplaza lo enmascarado por el fondo vecino: el tono sale de difundir el borde hacia adentro y
+    el grano (puntos, trazos del mar) se copia espejado a traves del borde de la mascara."""
+    a = np.array(a, dtype=np.float32)
+    m = np.asarray(mascara, dtype=bool)
+    if m.all():
+        raise ValueError('la mascara cubre todo: no hay fondo de donde rellenar')
+    alto, ancho = m.shape
+    suave = ndi.gaussian_filter(_difundir(a, ~m), sigma=(suavizado, suavizado, 0))
+    _, (cy, cx) = ndi.distance_transform_edt(m, return_indices=True)
+    yy, xx = np.nonzero(m)
+    # el punto espejo: igual de lejos del borde, pero del lado del mar
+    ey, ex = 2 * cy[yy, xx] - yy, 2 * cx[yy, xx] - xx
+    vale = (ey >= 0) & (ey < alto) & (ex >= 0) & (ex < ancho)
+    vale[vale] = ~m[ey[vale], ex[vale]]
+    r = a.copy()
+    r[yy, xx] = suave[yy, xx]
+    r[yy[vale], xx[vale]] += (a - suave)[ey[vale], ex[vale]]
+    r[yy, xx] = np.clip(r[yy, xx], 0, 255)
+    return r

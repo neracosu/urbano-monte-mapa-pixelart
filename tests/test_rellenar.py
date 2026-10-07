@@ -45,10 +45,32 @@ def test_rellenar_devuelve_el_fondo():
     m = silueta_por_color(a)
     r = rellenar(a, m)
     assert r.shape == a.shape and r.dtype == np.float32
-    assert np.abs(r[m] - MAR).max() < 0.01
+    # el suavizado deja entrar un rastro de la mota vecina: menos de un tono de la paleta
+    assert np.abs(r[m] - MAR).max() < 2
     assert np.array_equal(r[~m], a[~m])
 
 
 def test_rellenar_sin_fondo():
     with pytest.raises(ValueError, match='cubre todo'):
         rellenar(np.zeros((4, 4, 3), dtype=np.float32), np.ones((4, 4), dtype=bool))
+
+
+def test_silueta_suelta_las_lineas_finas_pegadas_a_la_figura():
+    a = escena()
+    a[0:14, 20] = [90, 90, 95]  # un meridiano de un pixel que baja hasta tocar la figura
+    m = silueta_por_color(a)
+    assert not m[0:12, 20].any()
+    assert m[14:26, 15:25].all()
+
+
+def test_rellenar_continua_la_textura_del_mar():
+    # mar con un punto oscuro cada 4 pixeles, como el punteado de Monte
+    a = np.full((48, 48, 3), MAR, dtype=np.float32)
+    a[::4, ::4] = [110, 120, 110]
+    m = np.zeros((48, 48), dtype=bool)
+    m[18:30, 18:30] = True
+    r = rellenar(a, m)
+    oscuros = (r[m][:, 0] < 135).sum()
+    assert oscuros >= 4                      # el parche no es una mancha lisa
+    assert r[m].min() >= 105 and r[m].max() <= 225   # ni colores ajenos al mar
+    assert np.array_equal(r[~m], a[~m])

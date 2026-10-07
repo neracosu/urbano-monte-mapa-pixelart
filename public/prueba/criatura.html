@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Monte: prueba de criatura animada</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="prueba.css">
+</head>
+<body>
+<main>
+  <h1>Monte: prueba de criatura animada</h1>
+  <p>El monstruo marino está recortado del propio mapa y se mueve por código. Debajo, el mar se
+    rellenó donde estaba dibujado. Fíjese si se nota el parche y si el movimiento le convence.</p>
+  <p><a href="index.html">Volver a las combinaciones</a></p>
+  <figure><canvas id="lienzo" class="pixel" role="img" aria-label="Monstruo marino del mapa de Monte, animado"></canvas></figure>
+  <p class="nota" id="aviso" role="status"></p>
+
+  <h2>Cómo quedó el recorte</h2>
+  <p>En rojo, lo que el proceso tomó como criatura.</p>
+  <figure><img class="pixel" src="criatura-silueta.png" alt="El recorte de la criatura marcado en rojo"></figure>
+
+  <h2>El mar sin la criatura</h2>
+  <figure><img class="pixel" src="criatura-fondo.png" alt="El mismo trozo de mar con la criatura borrada"></figure>
+
+  <footer>Mapa de Urbano Monte, 1587. Imagen: David Rumsey Map Collection, David Rumsey Map Center,
+    Stanford Libraries; compuesto de Brandon Rumsey. Imágenes derivadas bajo CC BY-NC-SA 3.0.</footer>
+</main>
+<script type="module" src="escala.js"></script>
+<script type="module" src="criatura.js"></script>
+</body>
+</html>
