@@ -23,6 +23,7 @@ body { font: 15px/1.4 system-ui, sans-serif; color: var(--papel); }
   max-width: calc(100% - 96px); margin: 0; padding: 4px 8px; background: rgb(15 22 32 / .82);
   font-size: 11px; color: var(--tinta); pointer-events: none;
 }
+.credito a { color: var(--acento); pointer-events: auto; padding: 6px 0; }
 .aviso {
   position: fixed; inset: 0; margin: auto; width: min(90%, 420px); height: fit-content; padding: 16px;
   background: var(--fondo); border: 2px solid var(--papel); text-align: center;
